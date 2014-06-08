@@ -53,6 +53,11 @@ namespace Cfvbaibai.CommonUtils
             WriteWithColor(ConsoleColor.Red, message);
         }
 
+        /// <summary>
+        /// Write error message with format.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The message arguments.</param>
         public static void ErrorF(string format, params object[] args)
         {
             Error(string.Format(format, args));
