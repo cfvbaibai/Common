@@ -29,6 +29,11 @@ namespace Cfvbaibai.CommonUtils
             }
         }
 
+        /// <summary>
+        /// Write message with specified console foreground color.
+        /// </summary>
+        /// <param name="foreColor">Console foreground color.</param>
+        /// <param name="message">The message to write.</param>
         public static void WriteWithColor(ConsoleColor foreColor, string message)
         {
             WriteWithColor(foreColor, Console.BackgroundColor, message);
