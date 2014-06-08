@@ -9,6 +9,12 @@ namespace Cfvbaibai.CommonUtils
     /// A more powerful console API
     public static class PowerConsole
     {
+        /// <summary>
+        /// Write message with specified console color.
+        /// </summary>
+        /// <param name="foreColor">Console foreground color.</param>
+        /// <param name="bgColor">Console background color.</param>
+        /// <param name="message">The message to write.</param>
         public static void WriteWithColor(ConsoleColor foreColor, ConsoleColor bgColor, string message)
         {
             Console.ForegroundColor = foreColor;
