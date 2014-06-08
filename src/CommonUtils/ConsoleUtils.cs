@@ -44,6 +44,10 @@ namespace Cfvbaibai.CommonUtils
             WriteWithColor(foreColor, bgColor, string.Format(format, args));
         }
 
+        /// <summary>
+        /// Write error message.
+        /// </summary>
+        /// <param name="message">The error message.</param>
         public static void Error(string message)
         {
             WriteWithColor(ConsoleColor.Red, message);
