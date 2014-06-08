@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -9,38 +10,84 @@ namespace Cfvbaibai.CommonUtils
 {
     public class WebRobot
     {
+        public string Accept { get; set; }
+        public string AcceptEncoding { get; set; }
+        public string AcceptLanguage { get; set; }
+        public string UserAgent { get; set; }
+        public string Referer { get; set; }
+        public string Host { get; set; }
+        public string Origin { get; set; }
+        public bool IsAjax { get; set; }
+
+        public Encoding Encoding { get; set; }
+
         private string cookie;
 
         public WebRobot()
         {
             System.Net.ServicePointManager.Expect100Continue = false;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            this.Encoding = Encoding.UTF8;
+            this.Accept = "*/*";
+            this.AcceptEncoding = "gzip,deflate,sdch";
+            this.AcceptLanguage = "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4";
+            this.UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36";
+            this.Referer = null;
+            this.Host = null;
+            this.Origin = null;
+            this.IsAjax = false;
+        }
+
+        private WebClient CreateClient(NameValueCollection extraHeaders = null)
+        {
+            WebClient client = new WebClient();
+            client.Encoding = this.Encoding;
+            Action <string, string> headerSetter = (header, value) =>
+                {
+                    if (value != null)
+                    {
+                        client.Headers.Set(header, value);
+                    }
+                };
+            headerSetter("Accept", this.Accept);
+            headerSetter("AcceptEncoding", this.AcceptEncoding);
+            headerSetter("AcceptLanguage", this.AcceptLanguage);
+            headerSetter("UserAgent", this.UserAgent);
+            headerSetter("Referer", this.Referer);
+            headerSetter("Host", this.Host);
+            headerSetter("Origin", this.Origin);
+            if (this.IsAjax)
+            {
+                headerSetter("X-Requested-With", "XMLHttpRequest");
+            }
+            if (extraHeaders != null)
+            {
+                for (int i = 0; i < extraHeaders.Count; ++i)
+                {
+                    headerSetter(extraHeaders.Keys[i], extraHeaders[i]);
+                }
+            }
+            return client;
         }
 
         public string Get(string url)
         {
-            using (var client = new WebClient())
+            using (var client = CreateClient())
             {
-                client.Encoding = Encoding.UTF8;
                 return client.DownloadString(url);
             }
         }
 
-        public string PostAjax(string url, string data)
+        public string Post(string url, string contentType, string data, NameValueCollection extraHeaders = null)
         {
             string result = "";
-            using (var client = new WebClient())
+            using (var client = CreateClient(extraHeaders))
             {
-                client.Encoding = Encoding.UTF8;
-                client.Headers.Add(HttpRequestHeader.Accept, "*/*");
-                client.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
-                client.Headers.Add(HttpRequestHeader.AcceptLanguage, "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4");
-                client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
-                client.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36");
-                client.Headers.Add(HttpRequestHeader.Referer, "http://zhaokaifang.com/");
-                client.Headers.Add(HttpRequestHeader.Host, "zhaokaifang.com");
-                client.Headers.Add("Origin", "http://zhaokaifang.com/");
-                client.Headers.Add("X-Requested-With", "XMLHttpRequest");
-                client.Headers.Add(HttpRequestHeader.Cookie, "bdshare_firstime=1401624144679; CNZZDATA1000135535=306085563-1401624139-%7C1401624139");
+                client.Headers.Set(HttpRequestHeader.ContentType, contentType);
                 if (!string.IsNullOrEmpty(cookie))
                 {
                     client.Headers.Add(HttpRequestHeader.Cookie, cookie);
