@@ -77,6 +77,10 @@ namespace Cfvbaibai.CommonUtils
             Warning(string.Format(format, args));
         }
 
+        /// <summary>
+        /// Write informational message with format.
+        /// </summary>
+        /// <param name="message">The informational message.</param>
         public static void Info(string message)
         {
             WriteWithColor(ConsoleColor.White, message);
