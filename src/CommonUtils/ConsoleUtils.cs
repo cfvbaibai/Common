@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cfvbaibai.CommonUtils
 {
+    /// A more powerful console API
     public static class PowerConsole
     {
         public static void WriteWithColor(ConsoleColor foreColor, ConsoleColor bgColor, string message)
