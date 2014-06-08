@@ -63,6 +63,10 @@ namespace Cfvbaibai.CommonUtils
             Error(string.Format(format, args));
         }
 
+        /// <summary>
+        /// Write warning message with format.
+        /// </summary>
+        /// <param name="message">The warning message.</param>
         public static void Warning(string message)
         {
             PowerConsole.WriteWithColor(ConsoleColor.Yellow, message);
